@@ -53,7 +53,7 @@ class git {
             group => "root",
             mode => 750,
             source => [
-                "puppet://$server/private/$domain/git/git_init_script",
+                "puppet://$server/private/$environment/git/git_init_script",
                 "puppet://$server/files/git/git_init_script",
                 "puppet://$server/git/git_init_script"
             ]

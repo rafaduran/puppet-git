@@ -12,6 +12,8 @@ TRANSLATIONS	= $(XML_LANG) $(OTHER_LANGS)
 COMMON_CONFIG  = /usr/share/publican
 include $(COMMON_CONFIG)/make/Makefile.common
 
+html: html-en-US
+
 release: html
 	@rsync -aHvz --delete --rsh=ssh tmp/en-US/html/ puppetmanaged.org:/data/www/puppetmanaged.org/www/public_html/documentation/git-module/
 
