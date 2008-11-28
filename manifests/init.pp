@@ -134,7 +134,10 @@ class git {
                 false => "$localtree/$name/hooks/update",
                 default => "$localtree/$prefix-$name/hooks/update"
             },
-            ensure => "$localtree/$name/hooks/post-commit",
+            ensure => $prefix ? {
+                false => "$localtree/$name/hooks/post-commit",
+                default => "$localtree/$prefix-$name/hooks/post-commit"
+            },
             require => [
                 File["git_repository_$name"],
                 Exec["git_init_script_$name"]
