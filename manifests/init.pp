@@ -377,7 +377,21 @@ class git {
         exec { "git_clone_exec_$localtree/$_name":
             cwd => $localtree,
             command => "git clone $source $_name",
-            creates => "$localtree/$_name/.git/"
+            creates => "$localtree/$_name/.git/",
+            requires => File["$localtree"]
+        }
+
+        if defined(File["$localtree"]) {
+            realize(
+                File["$localtree"]
+            )
+        } else {
+            @file { "$localtree":
+                ensure => directory
+            }
+            realize(
+                File["$localtree"]
+            )
         }
 
         case $branch {
@@ -386,7 +400,8 @@ class git {
                 exec { "git_clone_checkout_$branch_$localtree/$_name":
                     cwd => "$localtree/$_name",
                     command => "git checkout --track -b $branch origin/$branch",
-                    creates => "$localtree/$_name/.git/refs/heads/$branch"
+                    creates => "$localtree/$_name/.git/refs/heads/$branch",
+                    requires => Exec["git_clone_exec_$localtree/$_name"]
                 }
             }
         }
