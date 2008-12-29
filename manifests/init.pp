@@ -378,7 +378,7 @@ class git {
             cwd => $localtree,
             command => "git clone $source $_name",
             creates => "$localtree/$_name/.git/",
-            requires => File["$localtree"]
+            require => File["$localtree"]
         }
 
         if defined(File["$localtree"]) {
@@ -401,7 +401,7 @@ class git {
                     cwd => "$localtree/$_name",
                     command => "git checkout --track -b $branch origin/$branch",
                     creates => "$localtree/$_name/.git/refs/heads/$branch",
-                    requires => Exec["git_clone_exec_$localtree/$_name"]
+                    require => Exec["git_clone_exec_$localtree/$_name"]
                 }
             }
         }
