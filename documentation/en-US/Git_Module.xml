@@ -15,38 +15,133 @@
     <chapter id="GitModule-Prerequisites">
         <title>Prerequisites</title>
         <para>
-            There's a couple of requirements to the GIT module. Make sure these following packages or equivalent packages are available.
+            There's a couple of requirements to the GIT module, in order for the module to function properly.
         </para>
-        <para>
-            For a machine that is only going to act as a GIT client:
-            <itemizedlist>
-                <listitem>
-                    <para>
-                        <application>git-core</application>
-                    </para>
-                </listitem>
-            </itemizedlist>
-        </para>
-        <para>
-            For a machine that is going to act as a GIT server:
-            <itemizedlist>
-                <listitem>
-                    <para>
-                        <application>git-core</application>
-                    </para>
-                </listitem>
-                <listitem>
-                    <para>
-                        <application>git-daemon</application>
-                    </para>
-                </listitem>
-                <listitem>
-                    <para>
-                        <application>xinetd</application>
-                    </para>
-                </listitem>
-            </itemizedlist>
-        </para>
+
+        <section id="GitModule-Prerequisites-Clients">
+            <title>Clients</title>
+            <para>
+                Nodes including the <literal>git::client</literal> class need to have the following packages available, or it's equivalent:
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <formalpara>
+                            <title>git-core</title>
+                            <para>
+                                The GIT client programs such as <application>git-clone</application> and <application>git-pull</application>.
+                            </para>
+                        </formalpara>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </section>
+
+        <section id="GitModule-Prerequisites-Servers">
+            <title>Servers</title>
+            <para>
+                Nodes including the <literal>git::server</literal> class need to have the following packages available, or it's equivalent:
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <formalpara>
+                            <title>git-core</title>
+                            <para>
+                                The GIT client programs such as <application>git-init</application>, <application>git-clone</application> and <application>git-pull</application>.
+                            </para>
+                        </formalpara>
+                    </listitem>
+                    <listitem>
+                        <formalpara>
+                            <title>git-daemon</title>
+                            <para>
+                                The GIT daemon that enables sharing the GIT repositories over the network. There's no offline equivalent of <literal>git::repository</literal> available in this module, yet.
+                            </para>
+                        </formalpara>
+                    </listitem>
+                    <listitem>
+                        <formalpara>
+                            <title>xinetd</title>
+                            <para>
+                                The xinetd service
+                            </para>
+                        </formalpara>
+                    </listitem>
+                </itemizedlist>
+            </para>
+
+        </section>
+
+    </chapter>
+
+    <chapter id="GitModule-Installation">
+        <title>Installation</title>
+
+        <section id="GitModule-Installation-Upstream_Git_Repository">
+            <title>Upstream GIT Repository</title>
+            <para>
+                Using the upstream GIT repository, you can choose between different upstream branches; <emphasis>development</emphasis>, <emphasis>testing</emphasis>, or <emphasis>production</emphasis>. These branches correspond with the environments the puppetmanaged.org puppetmaster offers to it's clients.
+            </para>
+            <para>
+                The workflow in upstream GIT repository branches allows changes to first be applied to the <emphasis>development</emphasis>, then tested on a system that runs only this module, to see if the module itself works as expected. If the changes work as anticipated, they are pulled into the <emphasis>testing</emphasis> branch, and tested in conjunction with other modules (which may have changed as well) using a system that runs against the <emphasis>testing</emphasis> environment. If all is well, changes are pulled into the <emphasis>production</emphasis> branch.
+            </para>
+            <formalpara>
+                <title>Without Staging</title>
+                <para>
+                    We recommend that if you do not use staging, you use the <emphasis>production</emphasis> branch of the module. However, changes to the production branch are not applied as rapidly compared to the <emphasis>development</emphasis> branch.
+                </para>
+            </formalpara>
+            <para>
+                To obtain a clone of the GIT repository, use:
+            </para>
+            <para>
+                <screen>$ <userinput>git clone git://git.puppetmanaged.org/puppet/git</userinput></screen>
+            </para>
+            <para>
+                Then, checkout the branch you want to use, if not <emphasis>development</emphasis>:
+            </para>
+            <para>
+                <screen>$ <userinput>cd git/</userinput>
+$ <userinput>git checkout --track -b <replaceable>production</replaceable> origin/<replaceable>production</replaceable></userinput></screen>
+            </para>
+
+            <section id="GitModule-Installation-Upstream_Git_Repository-Automatic_Updates">
+                <title>Automatic Updates</title>
+                <para>
+                    If you used GIT to clone the repository, you can then use GIT to obtain updates to that module (and it's branches) by using:
+                </para>
+                <para>
+                    <screen>$ <userinput>git pull</userinput></screen>
+                </para>
+            </section>
+
+            <section id="GitModule-Installation-Upstream_Git_Repository-Full_Automation">
+                <title>Fully Automation</title>
+                <para>
+                    Using the same method as the puppetmaster from puppetmanaged.org, you can also enable full automation. This includes offering three separate environments to the nodes, but it's up to you which environment is actually used.
+                </para>
+                <para>
+                    Requires puppet-module-git (this module)
+                </para>
+                <para>
+                    Requires environment staging
+                </para>
+                <para>
+                    Requires patience
+                </para>
+            </section>
+
+        </section>
+
+        <section id="GitModule-Installation-Upstream_Packages">
+            <title>Upstream Packages</title>
+            <para>
+                A little something about using the upstream packages.
+            </para>
+
+        </section>
+
     </chapter>
 
     <chapter id="GitModule-Implementation">
@@ -377,7 +472,7 @@ find /path/to/repo -type d -exec chmod g+ws {} \;</screen>
                                         </para>
                                     </formalpara>
                                     <para>
-                                        <emphasis>Possible values</emphasis>: Any user on the system.
+                                        <emphasis>Possible values</emphasis>: Any user on the system. If no user with username <literal>$owner</literal> exists, <literal>git::repository</literal> will create it.
                                     </para>
                                     <para>
                                         <emphasis>Default value</emphasis>: <code>root</code>
@@ -483,17 +578,17 @@ find /path/to/repo -type d -exec chmod g+ws {} \;</screen>
         <section id="GitModule-ExampleUsage-git_repository">
             <title>Example <code>git::repository</code> Usage</title>
             <para>
-                The following is an example of <application>host1.example.com</application> that runs a git server with a git repository for <emphasis>program1</emphasis>, being developed by <emphasis>department</emphasis>, under the resposibility of <emphasis>manager</emphasis>.
+                The following is an example of <application>node1.example.org</application> that runs a git server with a git repository for <emphasis>program1</emphasis>, being developed by <emphasis>department</emphasis>, under the resposibility of <emphasis>manager</emphasis>.
             </para>
             <para>
-                <screen>node 'host1.example.com' {
-    git::repository { "program1":
-        owner => "manager",
-        group => "department",
-        public => false,
-        shared => true,
-        recipients => [ "department@example.com", "manager@example.com" ],
-        description => "SCM for program1"
+                <screen>node '<replaceable>host1.example.org</replaceable>' {
+    git::repository { "<replaceable>program1</replaceable>":
+        owner => "<replaceable>manager</replaceable>",
+        group => "<replaceable>department</replaceable>",
+        public => <replaceable>false</replaceable>,
+        shared => <replaceable>true</replaceable>,
+        recipients => [ <replaceable>"department@example.org"</replaceable>, <replaceable>"manager@example.org"</replaceable> ],
+        description => "<replaceable>SCM for program1</replaceable>"
     }
 }</screen>
             </para>
@@ -513,24 +608,24 @@ find /path/to/repo -type d -exec chmod g+ws {} \;</screen>
                     The <code>symlink_prefix</code> attribute is used as follows:
                 </para>
                 <para>
-                    <screen>node 'host1.example.com' {
+                    <screen>node '<replaceable>node1.example.org</replaceable>' {
     # GIT repositories for puppet modules
     git::repository { [
             "git",
             "puppet",
             "webserver"
         ]:
-        symlink_prefix => "puppet-module",
-        public => true,
-        shared => true,
-        group => "contributors",
-        localtree => "/data/scm/git/git.puppetmanaged.org/",
-        recipients => [ "contributors@example.com" ]
+        symlink_prefix => "<replaceable>puppet-module</replaceable>",
+        public => <replaceable>true</replaceable>,
+        shared => <replaceable>true</replaceable>,
+        group => "<replaceable>contributors</replaceable>",
+        localtree => "<replaceable>/data/scm/git/git.puppetmanaged.org/</replaceable>",
+        recipients => [ "<replaceable>contributors@example.org"</replaceable> ]
     }
 }</screen>
                 </para>
                 <para>
-                    Note how it defines more repositories, and puts them in <filename>/data/scm/git/git.puppetmanaged.org/</filename>, with group ownership for <code>contributors</code>. Normally, a symlink such as <filename>/git/webserver => /data/scm/git/git.puppetmanaged.org/webserver/</filename> would be created, but if we did that, then no other git repository can be named <code>webserver</code> anymore. Given that we specify a <code>symlink_prefix</code> of <code>puppet-module</code>, the symbolic link created will be <filename>/git/puppet-module-webserver => /data/scm/git/git.puppetmanaged.org/webserver/</filename>.
+                    Note how it defines more repositories, and puts them in <filename>/data/scm/git/git.puppetmanaged.org/</filename>, with group ownership for <code>contributors</code>. Normally, a symlink such as <filename>/git/webserver => /data/scm/git/git.puppetmanaged.org/webserver/</filename> would be created, but if we did that, then no other git repository can be named <code>webserver</code> anymore. Given that we specify a <code>symlink_prefix</code> of <code>puppet-module</code>, the symbolic link created will be <filename>/git/puppet-module-webserver => /data/scm/git/git.puppetmanaged.org/webserver/</filename>. See the <xref linkend="GitModule-FAQ-Symlink_Prefix" /> FAQ for more details.
                 </para>
             </section>
 
@@ -546,30 +641,109 @@ find /path/to/repo -type d -exec chmod g+ws {} \;</screen>
                     The <code>prefix</code> attribute is prepended to the name of the repository. Below is an example use of the <code>prefix</code> parameter.
                 </para>
                 <para>
-                    <screen>node 'host1.example.com' {
+                    <screen>node '<replaceable>node1.example.org</replaceable>' {
     # Git repositories for puppet modules
     git::repository { [
             "git",
             "puppet",
             "webserver"
         ]:
-        symlink_prefix => "puppet",
-        prefix => "module",
-        public => true,
-        shared => true,
-        group => "contributors",
-        localtree => "/data/scm/git/git.puppetmanaged.org/",
-        recipients => [ "contributors@example.com" ]
+        symlink_prefix => "<replaceable>puppet</replaceable>",
+        prefix => "<replaceable>module</replaceable>",
+        public => <replaceable>true</replaceable>,
+        shared => <replaceable>true</replaceable>,
+        group => "<replaceable>contributors</replaceable>",
+        localtree => "<replaceable>/data/scm/git/git.puppetmanaged.org/</replaceable>",
+        recipients => [ <replaceable>"contributors@example.org"</replaceable> ]
     }
 }</screen>
                 </para>
                 <para>
-                    Now, the git repository <code>webserver</code> will be created as <filename>/data/scm/git/git.puppetmanaged.org/module-webserver/</filename>, and a symbolic link <filename>/git/puppet-module-webserver => /data/scm/git/git.puppetmanaged.org/module-webserver/</filename>.
+                    Now, the git repository <code>webserver</code> will be created as <filename>/data/scm/git/git.puppetmanaged.org/module-webserver/</filename>, as well as a symbolic link <filename>/git/puppet-module-webserver => /data/scm/git/git.puppetmanaged.org/module-webserver/</filename>.
                 </para>
             </section>
 
         </section>
 
+    </chapter>
+
+    <chapter id="GitModule-Extension">
+        <title>Extension</title>
+        <para>
+            A little something about extending the module
+        </para>
+    </chapter>
+
+    <chapter id="GitModule-FAQ">
+        <title>FAQ</title>
+        <para>
+            Frequently asked questions
+        </para>
+
+        <formalpara id="GitModule-FAQ-Symlink_Prefix">
+            <title>What's the use of <literal>symlink_prefix</literal>?</title>
+            <para>
+                Getting back to the example usage of <literal>git::repository</literal>:
+            </para>
+        </formalpara>
+        <para>
+            <screen>node 'node1.example.org' {
+    git::repository { "webserver":
+        symlink_prefix => "<replaceable>puppet-module</replaceable>",
+        public => <replaceable>true</replaceable>,
+        shared => <replaceable>true</replaceable>,
+        group => "<replaceable>contributors</replaceable>",
+        localtree => "<replaceable>/data/scm/git/git.puppetmanaged.org/</replaceable>",
+        recipients => [ "<replaceable>contributors@example.org"</replaceable> ]
+    }
+}</screen>
+        </para>
+        <para>
+            The <literal>symlink_prefix</literal> causes a symbolic link to be created in <filename>/git/</filename>, named <filename>puppet-module-webserver</filename>. The symbolic link looks like this:
+        </para>
+        <para>
+            <screen><filename>/git/puppet-module-webserver</filename> => <filename>/data/scm/git/git.puppetmanaged.org/webserver/</filename></screen>
+        </para>
+        <para>
+            This creates the opportunity to create another GIT repository named <literal>webserver</literal> in a different path:
+        </para>
+        <para>
+            <screen>node 'node1.example.org' {
+    git::repository { "webserver":
+        symlink_prefix => "<replaceable>school-project</replaceable>",
+        public => <replaceable>false</replaceable>,
+        shared => <replaceable>true</replaceable>,
+        group => "<replaceable>students</replaceable>",
+        localtree => "<replaceable>/data/scm/git/git.school.org/</replaceable>",
+        recipients => [ "<replaceable>students@example.org"</replaceable> ]
+    }
+}</screen>
+        </para>
+
+        <formalpara>
+            <title>Question?</title>
+            <para>
+                Answer
+            </para>
+        </formalpara>
+    </chapter>
+
+    <chapter id="GitModule-TODO">
+        <title>TODO</title>
+        <para>
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        Enable passing $real_name to git::repository
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        Enable offline use of git::repository (not include git::server)
+                    </para>
+                </listitem>
+            </itemizedlist>
+        </para>
     </chapter>
 
     <xi:include href="Appendix.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
