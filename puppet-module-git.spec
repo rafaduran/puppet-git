@@ -2,7 +2,7 @@ Name:		puppet-module-git
 Summary:	Puppet module for git
 Group:		Applications/System
 Version:	0.0.1
-Release:	1
+Release:	2
 License:	GPLv3+
 URL:		http://puppetmanaged.org/
 Source0:	http://puppetmanaged.org/releases/puppet-module-git-%{version}.tar.gz
@@ -37,5 +37,8 @@ rm -rf %{buildroot}
 /var/lib/puppet/modules/git
 
 %changelog
+* Tue Dec 30 2008 Jeroen van Meeuwen <kanarip@kanarip.com> - 0.0.1-2
+- rebuilt
+
 * Thu Sep 25 2008 Jeroen van Meeuwen <kanarip@kanarip.com> - 0.0.1-1
 - First packaged version

@@ -195,7 +195,7 @@
                                         </para>
                                     </formalpara>
                                     <para>
-                                        The real name is applied as follows: When pulling, <code>git::pull</code> will navigate into the directory <filename>$localtree/$real_name</filename>, instead of the default <filename>$localtree/$name</filename>.
+                                        The real name is applied as follows: When pulling, <code>git::pull</code> will navigate into the directory <filename>$localtree/$real_name/</filename>, instead of the default <filename>$localtree/$name/</filename>.
                                     </para>
                                 </listitem>
                                 <listitem>

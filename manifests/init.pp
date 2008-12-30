@@ -95,6 +95,14 @@ class git {
 
         include server
 
+        user { "$owner":
+            ensure => present
+        }
+
+        group { "$group":
+            ensure => present
+        }
+
         file { "git_repository_$name":
             path => $prefix ? {
                 false => "$localtree/$name",
@@ -112,7 +120,8 @@ class git {
                     true => 2770,
                     default => 0750
                 }
-            }
+            },
+            require => [ User["$owner"], Group["$group"] ]
         }
 
         # Set the hook for this repository
@@ -125,7 +134,9 @@ class git {
             mode => 755,
             require => [
                 File["git_repository_$name"],
-                Exec["git_init_script_$name"]
+                Exec["git_init_script_$name"],
+                User["$owner"],
+                Group["$group"]
             ]
         }
 
@@ -140,7 +151,9 @@ class git {
             },
             require => [
                 File["git_repository_$name"],
-                Exec["git_init_script_$name"]
+                Exec["git_init_script_$name"],
+                User["$owner"],
+                Group["$group"]
             ]
         }
 
@@ -154,7 +167,9 @@ class git {
             group => "$group",
             require => [
                 File["git_repository_$name"],
-                Exec["git_init_script_$name"]
+                Exec["git_init_script_$name"],
+                User["$owner"],
+                Group["$group"]
             ]
         }
 
@@ -170,7 +185,9 @@ class git {
                     content => template('git/commit-list.erb'),
                     require => [
                         File["git_repository_$name"],
-                        Exec["git_init_script_$name"]
+                        Exec["git_init_script_$name"],
+                        User["$owner"],
+                        Group["$group"]
                     ]
                 }
             }
@@ -187,7 +204,9 @@ class git {
                     content => "$description",
                     require => [
                         File["git_repository_$name"],
-                        Exec["git_init_script_$name"]
+                        Exec["git_init_script_$name"],
+                        User["$owner"],
+                        Group["$group"]
                     ]
                 }
             }
@@ -209,7 +228,8 @@ class git {
             ensure => $prefix ? {
                 false => "$localtree/$name",
                 default => "$localtree/$prefix-$name"
-            }
+            },
+            require => [ User["$owner"], Group["$group"] ]
         }
 
         exec { "git_init_script_$name":
@@ -223,7 +243,9 @@ class git {
             },
             require => [
                 File["git_repository_$name"],
-                File["/usr/local/bin/git_init_script"]
+                File["/usr/local/bin/git_init_script"],
+                User["$owner"],
+                Group["$group"]
             ]
         }
     }
