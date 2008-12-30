@@ -64,6 +64,7 @@ class git {
                         $localtree = "/srv/git/", $owner = "root",
                         $group = "root", $symlink_prefix = false,
                         $prefix = false, $recipients = false,
+                        $real_name = false,
                         $description = false) {
         # FIXME
         # Why does this include server? One can run repositories without a
@@ -103,10 +104,16 @@ class git {
             ensure => present
         }
 
+        if ($real_name) {
+            $_name = $real_name
+        } else {
+            $_name = $name
+        }
+
         file { "git_repository_$name":
             path => $prefix ? {
-                false => "$localtree/$name",
-                default => "$localtree/$prefix-$name"
+                false => "$localtree/$_name",
+                default => "$localtree/$prefix-$_name"
             },
             ensure => directory,
             owner => "$owner",
@@ -127,10 +134,14 @@ class git {
         # Set the hook for this repository
         file { "git_repository_hook_post-commit_$name":
             path => $prefix ? {
-                false => "$localtree/$name/hooks/post-commit",
-                default => "$localtree/$prefix-$name/hooks/post-commit"
+                false => "$localtree/$_name/hooks/post-commit",
+                default => "$localtree/$prefix-$_name/hooks/post-commit"
             },
-            source => "puppet://$server/git/post-commit",
+            source => [
+                "puppet://$server/private/$environment/git/post-commit",
+                "puppet://$server/files/git/post-commit",
+                "puppet://$server/git/post-commit"
+            ],
             mode => 755,
             require => [
                 File["git_repository_$name"],
@@ -142,12 +153,12 @@ class git {
 
         file { "git_repository_hook_update_$name":
             path => $prefix ? {
-                false => "$localtree/$name/hooks/update",
-                default => "$localtree/$prefix-$name/hooks/update"
+                false => "$localtree/$_name/hooks/update",
+                default => "$localtree/$prefix-$_name/hooks/update"
             },
             ensure => $prefix ? {
-                false => "$localtree/$name/hooks/post-commit",
-                default => "$localtree/$prefix-$name/hooks/post-commit"
+                false => "$localtree/$_name/hooks/post-commit",
+                default => "$localtree/$prefix-$_name/hooks/post-commit"
             },
             require => [
                 File["git_repository_$name"],
@@ -159,8 +170,8 @@ class git {
 
         file { "git_repository_hook_post-update_$name":
             path => $prefix ? {
-                false => "$localtree/$name/hooks/post-update",
-                default => "$localtree/$prefix-$name/hooks/post-update"
+                false => "$localtree/$_name/hooks/post-update",
+                default => "$localtree/$prefix-$_name/hooks/post-update"
             },
             mode => 755,
             owner => "$owner",
@@ -179,8 +190,8 @@ class git {
             default: {
                 file { "git_repository_commit_list_$name":
                     path => $prefix ? {
-                        false => "$localtree/$name/commit-list",
-                        default => "$localtree/$prefix-$name/commit-list"
+                        false => "$localtree/$_name/commit-list",
+                        default => "$localtree/$prefix-$_name/commit-list"
                     },
                     content => template('git/commit-list.erb'),
                     require => [
@@ -198,8 +209,8 @@ class git {
             default: {
                 file { "git_repository_description_$name":
                     path => $prefix ? {
-                        false => "$localtree/$name/description",
-                        default => "$localtree/$prefix-$name/description"
+                        false => "$localtree/$_name/description",
+                        default => "$localtree/$prefix-$_name/description"
                     },
                     content => "$description",
                     require => [
@@ -215,31 +226,31 @@ class git {
         file { "git_repository_symlink_$name":
             path => $symlink_prefix ? {
                 false => $prefix ? {
-                    false => "/git/$name",
-                    default => "/git/$prefix-$name"
+                    false => "/git/$_name",
+                    default => "/git/$prefix-$_name"
                 },
                 default => $prefix ? {
-                    false => "/git/$symlink_prefix-$name",
-                    default => "/git/$symlink_prefix-$prefix-$name"
+                    false => "/git/$symlink_prefix-$_name",
+                    default => "/git/$symlink_prefix-$prefix-$_name"
                 }
             },
             links => manage,
             backup => false,
             ensure => $prefix ? {
-                false => "$localtree/$name",
-                default => "$localtree/$prefix-$name"
+                false => "$localtree/$_name",
+                default => "$localtree/$prefix-$_name"
             },
             require => [ User["$owner"], Group["$group"] ]
         }
 
         exec { "git_init_script_$name":
             command => $prefix ? {
-                false => "git_init_script --localtree $localtree --name $name --shared $shared --public $public --owner $owner --group $group",
-                default => "git_init_script --localtree $localtree --name $prefix-$name --shared $shared --public $public --owner $owner --group $group"
+                false => "git_init_script --localtree $localtree --name $_name --shared $shared --public $public --owner $owner --group $group",
+                default => "git_init_script --localtree $localtree --name $prefix-$_name --shared $shared --public $public --owner $owner --group $group"
             },
             creates => $prefix ? {
-                false => "$localtree/$name/info",
-                default => "$localtree/$prefix-$name"
+                false => "$localtree/$_name/info",
+                default => "$localtree/$prefix-$_name"
             },
             require => [
                 File["git_repository_$name"],
