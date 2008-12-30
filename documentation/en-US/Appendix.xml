@@ -3,11 +3,12 @@
 ]>
 
 <appendix id="documentation-Revision_History">
-	<appendixinfo>
-		<xi:include href="Revision_History.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	</appendixinfo>
-	<title>Revision History</title>
-	<para>
-	</para>
+    <appendixinfo>
+        <xi:include href="Revision_History.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+    </appendixinfo>
+    <title>Revision History</title>
+    <para>
+        para
+    </para>
 </appendix>
 

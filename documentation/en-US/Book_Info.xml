@@ -1,13 +1,18 @@
 <?xml version='1.0'?>
-<!DOCTYPE articleinfo PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docarticle/xml/4.5/docarticlex.dtd" [
+<!DOCTYPE bookinfo PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
 ]>
 
-<articleinfo id="PuppetCommonModules-PuppetModule">
-    <title>Puppet Common Modules</title>
-    <subtitle>The GIT Module</subtitle>
+<bookinfo id="GitModule">
+    <title>Git Module</title>
+    <subtitle>Documentation on the GIT Puppet Module</subtitle>
+<!--
     <issuenum>0.1</issuenum>
-    <productnumber>0</productnumber>
-    <abstract><para>This article is about configuration management for puppet, using the git module</para></abstract>
+    <productnumber>1.0</productnumber>
+    <edition>1.0</edition>
+    <pubsnumber>1</pubsnumber>
+    <productname>Git Module</productname>
+//-->
+    <abstract><para>This book is about configuration management for puppet, using the git module</para></abstract>
     <corpauthor>
         <inlinemediaobject>
             <imageobject>
@@ -22,7 +27,7 @@
     </copyright>
     <xi:include href="Common_Content/Legal_Notice.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
     <xi:include href="Author_Group.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-</articleinfo>
+</bookinfo>
 
 
 

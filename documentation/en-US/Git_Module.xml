@@ -1,24 +1,24 @@
 <?xml version='1.0'?>
-<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docarticle/xml/4.5/docarticlex.dtd" [
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
 ]>
 
-<article>
-    <xi:include href="Article_Info.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+<book>
+    <xi:include href="Book_Info.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <section id="GitModule-Introduction">
+    <chapter id="GitModule-Introduction">
         <title>GIT Module Introduction</title>
         <para>
             The puppetmanaged.org GIT module allows you to manage GIT repositories, as well as clone repositories, and pull changes from repositories. In addition, it allows you to specify whether a repository should be reset and/or cleaned before attempting a pull, which gives you the ultimate flexibility.
         </para>
-    </section>
+    </chapter>
 
-    <section id="GitModule-Prerequisites">
+    <chapter id="GitModule-Prerequisites">
         <title>Prerequisites</title>
         <para>
-            There's a couple of requirements to the git module.
+            There's a couple of requirements to the GIT module. Make sure these following packages or equivalent packages are available.
         </para>
         <para>
-            For a machine that is only going to act as a git client, make sure you install:
+            For a machine that is only going to act as a GIT client:
             <itemizedlist>
                 <listitem>
                     <para>
@@ -28,7 +28,7 @@
             </itemizedlist>
         </para>
         <para>
-            For a machine that is going to act as a git server, make sure you install:
+            For a machine that is going to act as a GIT server:
             <itemizedlist>
                 <listitem>
                     <para>
@@ -47,12 +47,12 @@
                 </listitem>
             </itemizedlist>
         </para>
-    </section>
+    </chapter>
 
-    <section id="GitModule-Implementation">
+    <chapter id="GitModule-Implementation">
         <title>Implementation</title>
         <para>
-            The GIT module manages the following resources by class or type definition:
+            The GIT module manages, or can manage, the following resources by class or type definition:
         </para>
         <para>
             <itemizedlist>
@@ -278,6 +278,7 @@
                                     <formalpara>
                                         <title>clean</title>
                                         <para>
+                                            para
                                         </para>
                                     </formalpara>
                                 </listitem>
@@ -437,11 +438,12 @@ find /path/to/repo -type d -exec chmod g+ws {} \;</screen>
                 </listitem>
             </itemizedlist>
         </para>
-    </section>
+    </chapter>
 
-    <section id="GitModule-Customization">
+    <chapter id="GitModule-Customization">
         <title>Customization</title>
         <para>
+            para
         </para>
 
         <section id="GitModule-Customization-GitInitScript">
@@ -471,9 +473,9 @@ find /path/to/repo -type d -exec chmod g+ws {} \;</screen>
             </para>
         </section>
 
-    </section>
+    </chapter>
 
-    <section id="GitModule-ExampleUsage">
+    <chapter id="GitModule-ExampleUsage">
         <title>Example Usage</title>
         <para>
         </para>
@@ -568,8 +570,8 @@ find /path/to/repo -type d -exec chmod g+ws {} \;</screen>
 
         </section>
 
-    </section>
+    </chapter>
 
     <xi:include href="Appendix.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-</article>
+</book>
 

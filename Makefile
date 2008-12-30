@@ -21,8 +21,72 @@ archive: test
 	@rm -rf /tmp/$(PKGNAME)-$(VERSION)
 	@echo "The archive is in $(PKGNAME)-$(VERSION).tar.gz"
 
+bumpspec: test
+	@rpmdev-bumpspec $(SPECFILE)
+
 rpm: archive
 	@rpmbuild -ta $(PKGNAME)-$(VERSION).tar.gz
+
+srpm: archive
+	@rpmbuild -ts $(PKGNAME)-$(VERSION).tar.gz
+
+tag:
+	@git tag -m "$(PKGNAME)-$(VERSION)-$(RELEASE)" $(PKGNAME)-$(VERSION)-$(RELEASE)
+
+release: tag rpm
+	@scp ~/rpmbuild/SRPMS/$(PKGNAME)-$(VERSION)-$(RELEASE).src.rpm elwood:/data/os/repos/custom/f9/SRPMS/
+	@scp ~/rpmbuild/RPMS/noarch/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/f9/i386/
+	@scp ~/rpmbuild/RPMS/noarch/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/f9/ppc64/
+	@scp ~/rpmbuild/RPMS/noarch/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/f9/ppc/
+	@scp ~/rpmbuild/RPMS/noarch/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/f9/x86_64/
+	@scp ~/rpmbuild/SRPMS/$(PKGNAME)-$(VERSION)-$(RELEASE).src.rpm elwood:/data/os/repos/custom/f10/SRPMS/
+	@scp ~/rpmbuild/RPMS/noarch/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/f10/i386/
+	@scp ~/rpmbuild/RPMS/noarch/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/f10/ppc64/
+	@scp ~/rpmbuild/RPMS/noarch/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/f10/ppc/
+	@scp ~/rpmbuild/RPMS/noarch/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/f10/x86_64/
+	@scp ~/rpmbuild/SRPMS/$(PKGNAME)-$(VERSION)-$(RELEASE).src.rpm elwood:/data/os/repos/custom/f11/SRPMS/
+	@scp ~/rpmbuild/RPMS/noarch/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/f11/i386/
+	@scp ~/rpmbuild/RPMS/noarch/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/f11/ppc64/
+	@scp ~/rpmbuild/RPMS/noarch/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/f11/ppc/
+	@scp ~/rpmbuild/RPMS/noarch/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/f11/x86_64/
+	@scp ~/rpmbuild/SRPMS/$(PKGNAME)-$(VERSION)-$(RELEASE).src.rpm elwood:/data/os/repos/custom/el4/SRPMS/
+	@scp ~/rpmbuild/RPMS/noarch/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/el4/i386/
+	@scp ~/rpmbuild/RPMS/noarch/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/el4/ppc64/
+	@scp ~/rpmbuild/RPMS/noarch/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/el4/ppc/
+	@scp ~/rpmbuild/RPMS/noarch/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/el4/x86_64/
+	@scp ~/rpmbuild/SRPMS/$(PKGNAME)-$(VERSION)-$(RELEASE).src.rpm elwood:/data/os/repos/custom/el5/SRPMS/
+	@scp ~/rpmbuild/RPMS/noarch/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/el5/i386/
+	@scp ~/rpmbuild/RPMS/noarch/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/el5/ppc64/
+	@scp ~/rpmbuild/RPMS/noarch/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/el5/ppc/
+	@scp ~/rpmbuild/RPMS/noarch/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/el5/x86_64/
+
+release-mock: tag rpm
+	@mock -v -r fedora-rawhide-i386 rebuild ~/rpmbuild/SRPMS/$(PKGNAME)-$(VERSION)-$(RELEASE).src.rpm
+	@scp /var/lib/mock/fedora-rawhide-i386/result/$(PKGNAME)-$(VERSION)-$(RELEASE).src.rpm elwood:/data/os/repos/custom/f9/SRPMS/
+	@scp /var/lib/mock/fedora-rawhide-i386/result/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/f9/i386/
+	@scp /var/lib/mock/fedora-rawhide-i386/result/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/f9/ppc64/
+	@scp /var/lib/mock/fedora-rawhide-i386/result/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/f9/ppc/
+	@scp /var/lib/mock/fedora-rawhide-i386/result/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/f9/x86_64/
+	@scp /var/lib/mock/fedora-rawhide-i386/result/$(PKGNAME)-$(VERSION)-$(RELEASE).src.rpm elwood:/data/os/repos/custom/f10/SRPMS/
+	@scp /var/lib/mock/fedora-rawhide-i386/result/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/f10/i386/
+	@scp /var/lib/mock/fedora-rawhide-i386/result/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/f10/ppc64/
+	@scp /var/lib/mock/fedora-rawhide-i386/result/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/f10/ppc/
+	@scp /var/lib/mock/fedora-rawhide-i386/result/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/f10/x86_64/
+	@scp /var/lib/mock/fedora-rawhide-i386/result/$(PKGNAME)-$(VERSION)-$(RELEASE).src.rpm elwood:/data/os/repos/custom/f11/SRPMS/
+	@scp /var/lib/mock/fedora-rawhide-i386/result/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/f11/i386/
+	@scp /var/lib/mock/fedora-rawhide-i386/result/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/f11/ppc64/
+	@scp /var/lib/mock/fedora-rawhide-i386/result/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/f11/ppc/
+	@scp /var/lib/mock/fedora-rawhide-i386/result/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/f11/x86_64/
+	@scp /var/lib/mock/fedora-rawhide-i386/result/$(PKGNAME)-$(VERSION)-$(RELEASE).src.rpm elwood:/data/os/repos/custom/el4/SRPMS/
+	@scp /var/lib/mock/fedora-rawhide-i386/result/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/el4/i386/
+	@scp /var/lib/mock/fedora-rawhide-i386/result/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/el4/ppc64/
+	@scp /var/lib/mock/fedora-rawhide-i386/result/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/el4/ppc/
+	@scp /var/lib/mock/fedora-rawhide-i386/result/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/el4/x86_64/
+	@scp /var/lib/mock/fedora-rawhide-i386/result/$(PKGNAME)-$(VERSION)-$(RELEASE).src.rpm elwood:/data/os/repos/custom/el5/SRPMS/
+	@scp /var/lib/mock/fedora-rawhide-i386/result/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/el5/i386/
+	@scp /var/lib/mock/fedora-rawhide-i386/result/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/el5/ppc64/
+	@scp /var/lib/mock/fedora-rawhide-i386/result/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/el5/ppc/
+	@scp /var/lib/mock/fedora-rawhide-i386/result/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/el5/x86_64/
 
 install:
 	mkdir -p $(DESTDIR)/var/lib/puppet/modules/git
