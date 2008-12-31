@@ -34,6 +34,7 @@ tag:
 	@git tag -m "$(PKGNAME)-$(VERSION)-$(RELEASE)" $(PKGNAME)-$(VERSION)-$(RELEASE)
 
 release: tag rpm
+	@scp $(PKGNAME)-$(VERSION).tar.gz puppetmanaged.org:/data/www/puppetmanaged.org/www/public_html/releases/.
 	@scp ~/rpmbuild/SRPMS/$(PKGNAME)-$(VERSION)-$(RELEASE).src.rpm elwood:/data/os/repos/custom/f9/SRPMS/
 	@scp ~/rpmbuild/RPMS/noarch/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/f9/i386/
 	@scp ~/rpmbuild/RPMS/noarch/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/f9/ppc64/
