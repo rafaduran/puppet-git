@@ -294,15 +294,25 @@ class git {
             require => Group["git-$name"]
         }
 
-        group { "git-$name":
-            ensure => present
+        if defined(Group["git-$name"]) {
+            realize(Group["git-$name"])
+        } else {
+            @group { "git-$name":
+                ensure => present
+            }
+            realize(Group["git-$name"])
         }
 
-        user { "satellite-$name":
-            ensure => present,
-            comment => "Satellite user for domain $name",
-            groups => "git-$name",
-            shell => "/usr/bin/git-shell"
+        if defined(User["satellite-$name"]) {
+            realize(User["satellite-$name"])
+        } else {
+            @user { "satellite-$name":
+                ensure => present,
+                comment => "Satellite user for domain $name",
+                groups => "git-$name",
+                shell => "/usr/bin/git-shell"
+            }
+            realize(User["satellite-$name"])
         }
     }
 
