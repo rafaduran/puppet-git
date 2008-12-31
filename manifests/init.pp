@@ -1,6 +1,8 @@
-# GIT Repository Utils
+# The git module
 #
-# This is a module from puppetmanaged.org
+# License: GPLv3+
+# Documentation: http://puppetmanaged.org/documentation/git-module.html
+# Tickets: http://puppetmanaged.org/trac/report/12
 #
 
 class git {

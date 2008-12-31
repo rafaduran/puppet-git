@@ -499,6 +499,12 @@ find /path/to/repo -type d -exec chmod g+ws {} \;</screen>
                                             The symlink_prefix is prepended to the repository name when creating a symbolic link to the actual repository in the <filename>/git/</filename> directory. See also <xref linkend="GitModule-Implementation-git_repository-prefix" />, and <xref linkend="GitModule-ExampleUsage-git_repository-symlink_prefix" />
                                         </para>
                                     </formalpara>
+                                    <para>
+                                        <emphasis>Possible values</emphasis>: Any alphanumeric string.
+                                    </para>
+                                    <para>
+                                        <emphasis>Default value</emphasis>: <code>false</code>
+                                    </para>
                                 </listitem>
                                 <listitem>
                                     <formalpara id="GitModule-Implementation-git_repository-prefix">
@@ -507,6 +513,26 @@ find /path/to/repo -type d -exec chmod g+ws {} \;</screen>
                                             The prefix is prepended to the name of the repository. This creates a repository named <filename>$prefix-$name/</filename> instead of <filename>$name/</filename>. See also <xref linkend="GitModule-Implementation-git_repository-symlink_prefix" />, and <xref linkend="GitModule-ExampleUsage-git_repository-prefix" />
                                         </para>
                                     </formalpara>
+                                    <para>
+                                        <emphasis>Possible values</emphasis>: Any alphanumeric string.
+                                    </para>
+                                    <para>
+                                        <emphasis>Default value</emphasis>: <code>false</code>
+                                    </para>
+                                </listitem>
+                                <listitem>
+                                    <formalpara id="GitModule-Implementation-git_repository-real_name">
+                                        <title><code>real_name</code></title>
+                                        <para>
+                                            The real_name, if set, is used rather then the title of the instantiated <literal>git::repository</literal> type. Particularly useful when creating more then one <literal>git::repository</literal> with name "webserver", since the <literal>Git::Repository["webserver"]</literal> resource can only be created once.
+                                        </para>
+                                    </formalpara>
+                                    <para>
+                                        <emphasis>Possible values</emphasis>: Any alphanumeric string.
+                                    </para>
+                                    <para>
+                                        <emphasis>Default value</emphasis>: <code>false</code>
+                                    </para>
                                 </listitem>
                                 <listitem>
                                     <formalpara>
@@ -515,6 +541,12 @@ find /path/to/repo -type d -exec chmod g+ws {} \;</screen>
                                             An array of recipients, that end up in the git repository's commit list, used to notify people of commits via email.
                                         </para>
                                     </formalpara>
+                                    <para>
+                                        <emphasis>Possible values</emphasis>: An array of email addresses.
+                                    </para>
+                                    <para>
+                                        <emphasis>Default value</emphasis>: <code>false</code>
+                                    </para>
                                 </listitem>
                                 <listitem>
                                     <formalpara>
@@ -523,6 +555,12 @@ find /path/to/repo -type d -exec chmod g+ws {} \;</screen>
                                             The description of this repository.
                                         </para>
                                     </formalpara>
+                                    <para>
+                                        <emphasis>Possible values</emphasis>: Any description.
+                                    </para>
+                                    <para>
+                                        <emphasis>Default value</emphasis>: <code>false</code>
+                                    </para>
                                 </listitem>
                             </itemizedlist>
                         </para>
@@ -538,13 +576,15 @@ find /path/to/repo -type d -exec chmod g+ws {} \;</screen>
     <chapter id="GitModule-Customization">
         <title>Customization</title>
         <para>
-            para
+            The Git module allows several things to be customized.
         </para>
 
         <section id="GitModule-Customization-GitInitScript">
             <title>Customizing <code>git_init_script</code></title>
             <para>
                 You can customize the <filename>/usr/local/bin/git_init_script</filename> by supplying another file in the domain specific or server specific tree. The <code>File["/usr/local/bin/git_init_script"]</code> resource polls the following sources, and uses the first hit it encounters:
+            </para>
+            <para>
                 <orderedlist>
                     <listitem>
                         <para>
@@ -566,6 +606,36 @@ find /path/to/repo -type d -exec chmod g+ws {} \;</screen>
             <para>
                 By default, the bash script that comes with the module is used. Customizing the <code>git_init_script</code> bash script requires you to supply the script at either the first (domain-specific) or the second (server specific) location.
             </para>
+        </section>
+
+        <section id="GitModule-Customization-PostCommitHook">
+            <title>Customizing <code>post-commit</code></title>
+            <para>
+                The post-commit hook normally sends out messages to the email addresses in <filename>$GIT_DIR/commit-list</filename>, or otherwise uses the updates pushed to the GIT repository for one purpose or the other.
+            </para>
+            <para>
+                The post-commit script with the Git module allows emails to be sent, containing the updates to the GIT repository, but you may have different requirements. The post-commit script is obtained from the following locations:
+            </para>
+            <para>
+                <orderedlist>
+                    <listitem>
+                        <para>
+                            <code>puppet://$server/private/$environment/git/post-commit,</code>
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            <code>puppet://$server/files/git/post-commit</code>
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            <code>puppet://$server/git/post-commit</code>
+                        </para>
+                    </listitem>
+                </orderedlist>
+            </para>
+
         </section>
 
     </chapter>
@@ -625,7 +695,7 @@ find /path/to/repo -type d -exec chmod g+ws {} \;</screen>
 }</screen>
                 </para>
                 <para>
-                    Note how it defines more repositories, and puts them in <filename>/data/scm/git/git.puppetmanaged.org/</filename>, with group ownership for <code>contributors</code>. Normally, a symlink such as <filename>/git/webserver => /data/scm/git/git.puppetmanaged.org/webserver/</filename> would be created, but if we did that, then no other git repository can be named <code>webserver</code> anymore. Given that we specify a <code>symlink_prefix</code> of <code>puppet-module</code>, the symbolic link created will be <filename>/git/puppet-module-webserver => /data/scm/git/git.puppetmanaged.org/webserver/</filename>. See the <xref linkend="GitModule-FAQ-Symlink_Prefix" /> FAQ for more details.
+                    Note how it defines more repositories, and puts them in <filename>/data/scm/git/git.puppetmanaged.org/</filename>, with group ownership for <code>contributors</code>. Normally, a symlink such as <filename>/git/webserver => /data/scm/git/git.puppetmanaged.org/webserver/</filename> would be created, but if we did that, then no other git repository can be named <code>webserver</code> anymore. Given that we specify a <code>symlink_prefix</code> of <code>puppet-module</code>, the symbolic link created will be <filename>/git/puppet-module-webserver => /data/scm/git/git.puppetmanaged.org/webserver/</filename>. See the <xref linkend="GitModule-FAQ-Whats_The_Use_Of_The_Symlink_Prefix_Attribute" /> FAQ for more details.
                 </para>
             </section>
 
@@ -680,7 +750,7 @@ find /path/to/repo -type d -exec chmod g+ws {} \;</screen>
             Frequently asked questions
         </para>
 
-        <formalpara id="GitModule-FAQ-Symlink_Prefix">
+        <formalpara id="GitModule-FAQ-Whats_The_Use_Of_The_Symlink_Prefix_Attribute">
             <title>What's the use of <literal>symlink_prefix</literal>?</title>
             <para>
                 Getting back to the example usage of <literal>git::repository</literal>:
@@ -688,8 +758,9 @@ find /path/to/repo -type d -exec chmod g+ws {} \;</screen>
         </formalpara>
         <para>
             <screen>node 'node1.example.org' {
-    git::repository { "webserver":
+    git::repository { "git.puppetmanaged.org-webserver":
         symlink_prefix => "<replaceable>puppet-module</replaceable>",
+        real_name => "webserver",
         public => <replaceable>true</replaceable>,
         shared => <replaceable>true</replaceable>,
         group => "<replaceable>contributors</replaceable>",
@@ -709,8 +780,9 @@ find /path/to/repo -type d -exec chmod g+ws {} \;</screen>
         </para>
         <para>
             <screen>node 'node1.example.org' {
-    git::repository { "webserver":
+    git::repository { "git.school.org-webserver":
         symlink_prefix => "<replaceable>school-project</replaceable>",
+        real_name => "webserver",
         public => <replaceable>false</replaceable>,
         shared => <replaceable>true</replaceable>,
         group => "<replaceable>students</replaceable>",
@@ -719,6 +791,23 @@ find /path/to/repo -type d -exec chmod g+ws {} \;</screen>
     }
 }</screen>
         </para>
+        <para>
+            Because puppet allows the instantation of a type only once, you cannot create multiple <literal>Git::Repository["webserver"]</literal> resources. Use the <literal>real_name</literal> attribute to <literal>git::repository</literal> to set the repository's real name (e.g. <emphasis>webserver</emphasis>).
+        </para>
+
+        <formalpara id="GitModule-FAQ-Whats_The_Use_Of_The_Prefix_Attribute">
+            <title>What's the use of the <literal>prefix</literal> attribute?</title>
+            <para>
+                When defining multiple GIT repositories, such as for domain specific configuration trees, or when using the <literal>git::repository::domain</literal> type, the <literal>prefix</literal> attribute helps because the title of the resource is used in several places, while the <literal>prefix</literal> enables distinction between, say, git repositories for modules and git repositories for domain specific configuration trees.
+            </para>
+        </formalpara>
+
+        <formalpara id="GitModule-FAQ-Can_I_Combine_The_Symlink_Prefix_And_Prefix_Attributes">
+            <title>Can I combine the <literal>symlink_prefix</literal> and <literal>prefix</literal> attributes?</title>
+            <para>
+                Yes you can. Note however that the <literal>$prefix</literal> yada yada
+            </para>
+        </formalpara>
 
         <formalpara>
             <title>Question?</title>
@@ -732,11 +821,6 @@ find /path/to/repo -type d -exec chmod g+ws {} \;</screen>
         <title>TODO</title>
         <para>
             <itemizedlist>
-                <listitem>
-                    <para>
-                        Enable passing $real_name to git::repository
-                    </para>
-                </listitem>
                 <listitem>
                     <para>
                         Enable offline use of git::repository (not include git::server)
