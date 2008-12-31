@@ -98,12 +98,22 @@ class git {
 
         include server
 
-        user { "$owner":
-            ensure => present
+        if defined(User["$owner"]) {
+            realize(User["$owner"])
+        } else {
+            @user { "$owner":
+                ensure => present
+            }
+            realize(User["$owner"])
         }
 
-        group { "$group":
-            ensure => present
+        if defined(Group["$group"]) {
+            realize(Group["$group"])
+        } else  {
+            @group { "$group":
+                ensure => present
+            }
+            realize(Group["$group"])
         }
 
         if ($real_name) {
