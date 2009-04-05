@@ -29,7 +29,10 @@ class git {
         # service is running
         #
 
-        package { "git-daemon":
+        package { [
+                "diffstat",
+                "git-daemon"
+            ]:
             ensure => installed
         }
 
