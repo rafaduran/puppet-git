@@ -434,7 +434,7 @@ class git {
 
         exec { "git_clone_exec_$localtree/$_name":
             cwd => $localtree,
-            command => "git clone `echo $source | sed -r -e 's,(git://|ssh://)(.*)//(.*),\1\2/\3,g'` $_name",
+            command => "git clone `echo $source | sed -r -e 's,(git://|ssh://)(.*)//(.*),\\1\\2/\\3,g'` $_name",
             creates => "$localtree/$_name/.git/",
             require => File["$localtree"]
         }
