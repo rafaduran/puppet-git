@@ -281,6 +281,7 @@ class git {
                                 $localtree = "/srv/git/",
                                 $owner = "root",
                                 $group = "root",
+                                $prefix = false,
                                 $symlink_prefix = false,
                                 $recipients = false,
                                 $description = false) {
@@ -290,8 +291,8 @@ class git {
             localtree => "$localtree/",
             owner => "$owner",
             group => "git-$name",
-            prefix => "domain",
-            symlink_prefix => "$symlink_prefix",
+            prefix => $prefix,
+            symlink_prefix => $symlink_prefix,
             recipients => $recipients,
             description => "$description",
             require => Group["git-$name"]
