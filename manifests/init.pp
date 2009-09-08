@@ -99,6 +99,19 @@ class git {
         # Set $init to false to prevent the initial commit to be made
         #
 
+        if !defined(File["/usr/local/bin/git_init_script"]) {
+            file { "/usr/local/bin/git_init_script":
+                owner => "root",
+                group => "root",
+                mode => 750,
+                source => [
+                    "puppet://$server/private/$environment/git/git_init_script",
+                    "puppet://$server/files/git/git_init_script",
+                    "puppet://$server/git/git_init_script"
+                ]
+            }
+        }
+
         if defined(User["$owner"]) {
             realize(User["$owner"])
         } else {
