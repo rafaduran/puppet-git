@@ -99,8 +99,6 @@ class git {
         # Set $init to false to prevent the initial commit to be made
         #
 
-        include server
-
         if defined(User["$owner"]) {
             realize(User["$owner"])
         } else {
