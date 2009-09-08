@@ -68,6 +68,7 @@ class git {
     define repository(  $public = false, $shared = false,
                         $localtree = "/srv/git/", $owner = "root",
                         $group = "root", $symlink_prefix = false,
+                        $symbolic_link = true,
                         $prefix = false, $recipients = false,
                         $real_name = false,
                         $description = false) {
@@ -249,24 +250,26 @@ class git {
             }
         }
 
-        file { "git_repository_symlink_$name":
-            path => $symlink_prefix ? {
-                false => $prefix ? {
-                    false => "/git/$_name",
-                    default => "/git/$prefix-$_name"
+        if $symbolic_link {
+            file { "git_repository_symlink_$name":
+                path => $symlink_prefix ? {
+                    false => $prefix ? {
+                        false => "/git/$_name",
+                        default => "/git/$prefix-$_name"
+                    },
+                    default => $prefix ? {
+                        false => "/git/$symlink_prefix-$_name",
+                        default => "/git/$symlink_prefix-$prefix-$_name"
+                    }
                 },
-                default => $prefix ? {
-                    false => "/git/$symlink_prefix-$_name",
-                    default => "/git/$symlink_prefix-$prefix-$_name"
-                }
-            },
-            links => manage,
-            backup => false,
-            ensure => $prefix ? {
-                false => "$localtree/$_name",
-                default => "$localtree/$prefix-$_name"
-            },
-            require => [ User["$owner"], Group["$group"] ]
+                links => manage,
+                backup => false,
+                ensure => $prefix ? {
+                    false => "$localtree/$_name",
+                    default => "$localtree/$prefix-$_name"
+                },
+                require => [ User["$owner"], Group["$group"] ]
+            }
         }
 
         exec { "git_init_script_$name":
