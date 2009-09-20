@@ -187,6 +187,7 @@ class git {
                 false => "$localtree/$_name/hooks/post-commit",
                 default => "$localtree/$prefix-$_name/hooks/post-commit"
             },
+            links => manage,
             require => [
                 File["git_repository_$name"],
                 Exec["git_init_script_$name"],
