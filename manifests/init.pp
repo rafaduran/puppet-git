@@ -29,6 +29,16 @@ class git {
         # service is running
         #
 
+        if defined(Package["xinetd"]) {
+            realize(Package["xinetd"])
+        } else {
+            @package { "xinetd":
+                ensure => installed
+            }
+
+            realize(Package["xinetd"])
+        }
+
         package { [
                 "diffstat",
                 "git-daemon"
@@ -45,7 +55,8 @@ class git {
 
         service { "xinetd":
             enable => true,
-            ensure => running
+            ensure => running,
+            require => Package["xinetd"]
         }
 
         file { "/git/":
