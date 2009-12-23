@@ -280,7 +280,7 @@ class git {
             },
             creates => $prefix ? {
                 false => "$localtree/$_name/info",
-                default => "$localtree/$prefix-$_name"
+                default => "$localtree/$prefix-$_name/info"
             },
             require => [
                 File["git_repository_$name"],
