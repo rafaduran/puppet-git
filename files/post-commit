@@ -59,7 +59,14 @@ else
     echo "Subject: $subject"
 fi
 
-echo "To: $recipients"
+# Compose string for To: field
+to_field=""
+for rcpt in $recipients; do
+	[ -n $rcpt ] && to_field=`echo -n "$to_field$rcpt;"`
+done
+# Strip final ';'
+to_field=`echo $to_field | sed -e 's/;$//'`
+echo "To: $to_field"
 echo "X-Project: $project"
 module=$(basename `readlink -f $GIT_DIR`)
 echo "X-Git-Module: $module"
