@@ -1,4 +1,4 @@
-Name    'git'
+name    'git'
 version '0.5.0'
 
 ## Add dependencies, if any:
