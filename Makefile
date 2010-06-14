@@ -4,7 +4,6 @@ VERSION		:= $(shell rpm -q --qf "%{VERSION}\n" --specfile $(SPECFILE)| head -1)
 RELEASE		:= $(shell rpm -q --qf "%{RELEASE}\n" --specfile $(SPECFILE)| head -1)
 
 clean:
-	@rm -rf documentation/tmp
 	@rm -rf $(PKGNAME)-$(VERSION)/
 	@rm -rf $(PKGNAME)-$(VERSION).tar.gz
 
@@ -90,7 +89,7 @@ release-mock: tag rpm
 	@scp /var/lib/mock/fedora-rawhide-i386/result/$(PKGNAME)-$(VERSION)-$(RELEASE).noarch.rpm elwood:/data/os/repos/custom/el5/x86_64/
 
 install:
-	mkdir -p $(DESTDIR)/var/lib/puppet/modules/git
-	cp -r files $(DESTDIR)/var/lib/puppet/modules/git/
-	cp -r manifests $(DESTDIR)/var/lib/puppet/modules/git/
-	cp -r templates $(DESTDIR)/var/lib/puppet/modules/git/
+	mkdir -p $(DESTDIR)/var/lib/puppetmanaged.org/modules/git
+	cp -r files $(DESTDIR)/var/lib/puppetmanaged.org/modules/git/
+	cp -r manifests $(DESTDIR)/var/lib/puppetmanaged.org/modules/git/
+	cp -r templates $(DESTDIR)/var/lib/puppetmanaged.org/modules/git/

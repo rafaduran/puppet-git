@@ -1,8 +1,8 @@
 Name:		puppet-module-git
 Summary:	Puppet module for git
 Group:		Applications/System
-Version:	0.0.1
-Release:	3
+Version:	0.5.0
+Release:	1
 License:	GPLv3+
 URL:		http://puppetmanaged.org/
 Source0:	http://puppetmanaged.org/releases/puppet-module-git-%{version}.tar.gz
@@ -13,15 +13,12 @@ BuildRequires:	publican
 Requires:	puppet-server
 
 %description
-Puppet module for managing yum
+Puppet module for managing Git repositories both server as well as client-side
 
 %prep
 %setup -q
 
 %build
-cd documentation
-make pdf-en-US
-mv tmp/en-US/pdf/Git_Module.pdf ..
 
 %install
 rm -rf %{buildroot}
@@ -33,15 +30,12 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc COPYING Git_Module.pdf
-/var/lib/puppet/modules/git
+%doc COPYING README
+%{_localstatedir}/lib/puppetmanaged.org/modules/git
 
 %changelog
-* Wed Dec 31 2008 Jeroen van Meeuwen <kanarip@kanarip.com> - 0.0.1-3
-- rebuilt
-
-* Tue Dec 30 2008 Jeroen van Meeuwen <kanarip@kanarip.com> - 0.0.1-2
-- rebuilt
+* Mon Jun 14 2010 Jeroen van Meeuwen <kanarip@kanarip.com> - 0.5.0-1
+- Release to forge.puppetlabs.com
 
 * Thu Sep 25 2008 Jeroen van Meeuwen <kanarip@kanarip.com> - 0.0.1-1
 - First packaged version
