@@ -310,6 +310,7 @@ class git {
                                 $prefix = false,
                                 $symlink_prefix = false,
                                 $recipients = false,
+                                $satelliteuser = false,
                                 $description = false) {
         repository { "$name":
             public => $public,
@@ -333,16 +334,18 @@ class git {
             realize(Group["git-$name"])
         }
 
-        if defined(User["satellite-$name"]) {
-            realize(User["satellite-$name"])
-        } else {
-            @user { "satellite-$name":
-                ensure => present,
-                comment => "Satellite user for domain $name",
-                groups => "git-$name",
-                shell => "/usr/bin/git-shell"
+        if ($satelliteuser) {
+            if defined(User["satellite-$name"]) {
+                realize(User["satellite-$name"])
+            } else {
+                @user { "satellite-$name":
+                    ensure => present,
+                    comment => "Satellite user for domain $name",
+                    groups => "git-$name",
+                    shell => "/usr/bin/git-shell"
+                }
+                realize(User["satellite-$name"])
             }
-            realize(User["satellite-$name"])
         }
     }
 
