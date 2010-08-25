@@ -70,8 +70,8 @@ class git {
             mode => 750,
             source => [
                 "puppet://$server/private/$environment/git/git_init_script",
-                "puppet://$server/files/git/git_init_script",
-                "puppet://$server/git/git_init_script"
+                "puppet://$server/modules/files/git/git_init_script",
+                "puppet://$server/modules/git/git_init_script"
             ]
         }
     }
@@ -118,8 +118,8 @@ class git {
                 mode => 750,
                 source => [
                     "puppet://$server/private/$environment/git/git_init_script",
-                    "puppet://$server/files/git/git_init_script",
-                    "puppet://$server/git/git_init_script"
+                    "puppet://$server/modules/files/git/git_init_script",
+                    "puppet://$server/modules/git/git_init_script"
                 ]
             }
         }
@@ -177,8 +177,8 @@ class git {
             },
             source => [
                 "puppet://$server/private/$environment/git/post-commit",
-                "puppet://$server/files/git/post-commit",
-                "puppet://$server/git/post-commit"
+                "puppet://$server/modules/files/git/post-commit",
+                "puppet://$server/modules/git/post-commit"
             ],
             mode => 755,
             require => [
