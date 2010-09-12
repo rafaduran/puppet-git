@@ -238,6 +238,7 @@ class git {
                         Group["$group"]
                     ]
                 }
+            }
             default: {
                 file { "git_repository_commit_list_$name":
                     path => $prefix ? {
