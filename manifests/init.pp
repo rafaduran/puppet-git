@@ -48,7 +48,6 @@ class git {
 
         service { "git":
             enable => true,
-            ensure => running,
             require => Package["git-daemon"],
             notify => Service["xinetd"]
         }
