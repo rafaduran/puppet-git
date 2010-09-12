@@ -224,7 +224,20 @@ class git {
 
         # In case there are recipients defined, get in the commit-list
         case $recipients {
-            false: {}
+            false: {
+                file { "git_repository_commit_list_$name":
+                    path => $prefix ? {
+                        false => "$localtree/$_name/commit-list",
+                        default => "$localtree/$prefix-$_name/commit-list"
+                    },
+                    content => "",
+                    require => [
+                        File["git_repository_$name"],
+                        Exec["git_init_script_$name"],
+                        User["$owner"],
+                        Group["$group"]
+                    ]
+                }
             default: {
                 file { "git_repository_commit_list_$name":
                     path => $prefix ? {
@@ -243,7 +256,21 @@ class git {
         }
 
         case $description {
-            false: {}
+            false: {
+                file { "git_repository_description_$name":
+                    path => $prefix ? {
+                        false => "$localtree/$_name/description",
+                        default => "$localtree/$prefix-$_name/description"
+                    },
+                    content => "Unnamed repository",
+                    require => [
+                        File["git_repository_$name"],
+                        Exec["git_init_script_$name"],
+                        User["$owner"],
+                        Group["$group"]
+                    ]
+                }
+            }
             default: {
                 file { "git_repository_description_$name":
                     path => $prefix ? {
