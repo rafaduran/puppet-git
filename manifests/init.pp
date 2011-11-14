@@ -489,6 +489,12 @@ class git {
             $_name = $name
         }
 
+        if ! defined(Package["git"]) {
+            package { "git":
+                ensure => present,
+            }
+        }
+
         exec { "git_clone_exec_$localtree/$_name":
             cwd => $localtree,
             command => "git clone `echo $source` $_name",
