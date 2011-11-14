@@ -481,7 +481,7 @@ class git {
     define clone(   $source,
                     $localtree = "/srv/git/",
                     $real_name = false,
-                    $branch = false) {
+                    $revision = false) {
         if $real_name {
             $_name = $real_name
         }
@@ -491,8 +491,9 @@ class git {
 
         exec { "git_clone_exec_$localtree/$_name":
             cwd => $localtree,
-            command => "git clone `echo $source | sed -r -e 's,(git://|ssh://)(.*)//(.*),\\1\\2/\\3,g'` $_name",
+            command => "git clone `echo $source` $_name",
             creates => "$localtree/$_name/.git/",
+            path    => ["/usr/bin"],
             require => File["$localtree"]
         }
 
@@ -509,13 +510,13 @@ class git {
             )
         }
 
-        case $branch {
+        case $revision {
             false: {}
             default: {
-                exec { "git_clone_checkout_$branch_$localtree/$_name":
+                exec { "git_clone_checkout_$revision_$localtree/$_name":
                     cwd => "$localtree/$_name",
-                    command => "git checkout --track -b $branch origin/$branch",
-                    creates => "$localtree/$_name/.git/refs/heads/$branch",
+                    command => "git checkout $revision",
+                    path    => ["/usr/bin"],
                     require => Exec["git_clone_exec_$localtree/$_name"]
                 }
             }
