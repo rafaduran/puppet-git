@@ -482,7 +482,7 @@ class git {
                     $localtree = "/srv/git/",
                     $real_name = false,
                     $revision  = false,
-                    $onlyif    = true) {
+                    $onlyif    = "/bin/true") {
         if $real_name {
             $_name = $real_name
         }
