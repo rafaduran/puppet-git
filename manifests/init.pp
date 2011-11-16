@@ -481,7 +481,8 @@ class git {
     define clone(   $source,
                     $localtree = "/srv/git/",
                     $real_name = false,
-                    $revision = false) {
+                    $revision  = false,
+                    $onlyif    = true) {
         if $real_name {
             $_name = $real_name
         }
@@ -497,10 +498,11 @@ class git {
 
         exec { "git_clone_exec_$localtree/$_name":
             cwd => $localtree,
-            command => "git clone `echo $source` $_name",
+            command => "git clone $source $_name",
             creates => "$localtree/$_name/.git/",
             path    => ["/usr/bin"],
-            require => File["$localtree"]
+            require => File["$localtree"],
+            onlyif  => $onlyif
         }
 
         if defined(File["$localtree"]) {
