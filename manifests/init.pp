@@ -502,6 +502,7 @@ class git {
             creates => "$localtree/$_name/.git/",
             path    => ["/usr/bin"],
             require => File["$localtree"],
+            timeout => 0,
             onlyif  => $onlyif
         }
 
